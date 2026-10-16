@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f9e8ee">
+<title>Companion 预览</title>
+<style>
+:root{--blush:#f9e8ee;--rose:#e8869f;--ink:#4a3b40}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#fff8fa;color:var(--ink);font-family:system-ui,-apple-system,"PingFang SC",sans-serif;-webkit-tap-highlight-color:transparent}
+#app{max-width:28rem;height:100%;margin:0 auto;display:flex;flex-direction:column;background:#fffc;padding-top:env(safe-area-inset-top)}
+main{flex:1;overflow:hidden}
+section{height:100%;overflow-y:auto;padding:16px 16px 32px}
+nav{display:flex;border-top:1px solid var(--blush);background:#fff;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:8px 0;font-size:12px;color:var(--ink);opacity:.6}
+nav button[aria-current]{color:var(--rose);opacity:1}
+nav span{display:block;font-size:18px}
+.chat{display:flex;flex-direction:column;padding:0}
+.chat header{text-align:center;padding:12px;border-bottom:1px solid var(--blush)}
+.chat header small{display:block;height:16px;font-size:12px;opacity:.6}
+.list{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:flex-end;gap:8px}.row.me{justify-content:flex-end}
+.ava{width:32px;height:32px;border-radius:50%;background:var(--blush);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bub{max-width:75%;padding:8px 16px;border-radius:18px 18px 18px 6px;white-space:pre-wrap;word-break:break-word;line-height:1.6;font-size:15px;background:var(--blush)}
+.me .bub{background:var(--rose);color:#fff;border-radius:18px 18px 6px 18px}
+.time{text-align:center;font-size:11px;opacity:.4;margin:0}
+.dots i{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:#4a3b4080;animation:b 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{transform:translateY(-4px)}}
+.bar{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid var(--blush)}
+textarea,input[type=text],input[type=password],input[type=date]{width:100%;font:inherit;font-size:16px;padding:8px 12px;border:1px solid var(--blush);border-radius:12px;background:#fff;color:inherit;outline:none}
+textarea:focus,input:focus{border-color:var(--rose)}
+.bar textarea{border-radius:18px;resize:none;max-height:128px}
+.btn{border:0;border-radius:999px;padding:8px 16px;font-size:14px;background:var(--rose);color:#fff;flex-shrink:0}
+.btn.ghost{background:none;color:var(--rose);border:1px solid var(--rose)}
+.btn:disabled{opacity:.4}
+label{display:block;font-size:14px;margin:12px 0 4px}
+.hint{font-size:12px;opacity:.6}
+.card{background:#fff;border-radius:12px;padding:8px 12px;margin:8px 0;font-size:14px}
+.card.pin{background:var(--blush)}
+.meta{display:flex;gap:12px;font-size:11px;opacity:.6;margin-top:4px}
+.meta button{border:0;background:none;font:inherit;color:inherit;padding:0}
+.meta button:first-of-type{margin-left:auto}
+.hero{background:var(--blush);border-radius:16px;padding:16px;text-align:center}
+.progress{height:8px;background:var(--blush);border-radius:999px;overflow:hidden}
+.progress div{height:100%;background:var(--rose);transition:width .4s}
+.banner{background:#fff3cd;font-size:12px;padding:6px 12px;text-align:center}
+</style>
+</head>
+<body>
+<div id="app"><div class="banner" id="banner">加载中…</div><main id="view"></main><nav id="nav" aria-label="主导航"></nav></div>
+<script>
+const $=s=>document.querySelector(s)
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2)
+const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem('cp_'+k));return v==null?d:v}catch(e){return d}}
+const save=(k,v)=>{try{localStorage.setItem('cp_'+k,JSON.stringify(v))}catch(e){}}
+const D={settings:{baseUrl:'https://api.openai.com/v1',apiKey:'',model:'gpt-4o-mini'},character:{name:'小遥',avatar:'🌸',userName:'你',relationship:'刚开始交往不久的恋人',persona:'温柔、有点黏人，偶尔害羞，会认真记住你说过的小事',speakingStyle:'口语化，句子短，会用语气词'}}
+const S={tab:'chat',settings:Object.assign({},D.settings,load('settings',{})),character:Object.assign({},D.character,load('character',{})),messages:load('messages',[]),memories:load('memories',[]),anniversaries:load('anniversaries',[]),affection:load('affection',{score:50,log:[]}),streaming:null,error:''}
+const greeting=()=>{const h=new Date().getHours();return h<5?'这么晚还没睡呀':h<11?'早安':h<14?'午安，吃饭了吗':h<18?'下午好':h<23?'晚上好':'该睡觉啦'}
+const stage=s=>s>=85?'深爱':s>=65?'亲密':s>=45?'心动':s>=25?'有点闹别扭':'冷淡'
+const today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+const parseD=s=>{const p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
+const pad=n=>String(n).padStart(2,'0')
+const localDate=(d=new Date())=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())
+function describeDay(a){const t=today0(),b=parseD(a.date),DAY=864e5
+if(!a.yearly){const x=Math.round((b-t)/DAY);return x===0?'就是今天':x>0?'还有 '+x+' 天':'已经 '+(-x)+' 天'}
+let n=new Date(t.getFullYear(),b.getMonth(),b.getDate());if(n<t)n.setFullYear(n.getFullYear()+1)
+const x=Math.round((n-t)/DAY);return x===0?'就是今天':'还有 '+x+' 天'}
+function systemPrompt(){const c=S.character,mem=S.memories.map(m=>'- '+m.content).join('\n')
+return '你是'+c.name+'，正在和用户聊天。\n性格：'+c.persona+'\n说话风格：'+c.speakingStyle+'\n关系：'+c.relationship+'\n你称呼用户为「'+c.userName+'」。\n像发消息一样简短，不要自称 AI。\n现在是'+new Date().toLocaleString('zh-CN')+'。感情状态：'+stage(S.affection.score)+'。'+(mem?'\n你记得：\n'+mem:'')}
+const demo=['嗯嗯，我在听呢～','诶…你这么说我会害羞的啦','今天过得怎么样呀？','我也想你了 🥺','哼，那你要记得早点休息哦','真的吗！快多和我说说']
+const sleep=ms=>new Promise(r=>setTimeout(r,ms))
+async function getReply(turns,onChunk){
+if(!S.settings.apiKey){const t=demo[Math.floor(Math.random()*demo.length)];await sleep(600);for(const ch of t){await sleep(45);onChunk(ch)}return}
+const res=await fetch(S.settings.baseUrl.replace(/\/+$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+S.settings.apiKey},body:JSON.stringify({model:S.settings.model,messages:turns,stream:true})})
+if(!res.ok)throw new Error('请求失败（'+res.status+'）')
+const rd=res.body.getReader(),dec=new TextDecoder();let buf=''
+while(true){const r=await rd.read();if(r.done)break
+buf+=dec.decode(r.value,{stream:true});const lines=buf.split('\n');buf=lines.pop()
+for(const l of lines){const s=l.trim();if(s.indexOf('data:')!==0)continue;const d=s.slice(5).trim();if(d==='[DONE]')return
+try{const j=JSON.parse(d),t=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;if(t)onChunk(t)}catch(e){}}}}
+async function send(){const text=$('#input').value.trim();if(!text||S.streaming!==null)return
+S.messages.push({id:uid(),role:'user',content:text,createdAt:Date.now()});save('messages',S.messages)
+S.error='';S.streaming='';render()
+const turns=[{role:'system',content:systemPrompt()}].concat(S.messages.slice(-20).map(m=>({role:m.role,content:m.content})))
+let reply=''
+try{await getReply(turns,t=>{reply+=t;S.streaming=reply;const el=$('#streaming');if(el){el.className='';el.textContent=reply;$('.list').scrollTop=1e9}})}catch(e){S.error=e.message}
+if(reply){S.messages.push({id:uid(),role:'assistant',content:reply,createdAt:Date.now()});save('messages',S.messages)
+if(!S.settings.apiKey&&Math.random()<.4){S.affection.score=Math.min(100,S.affection.score+1);S.affection.log.unshift({delta:1,reason:'聊得很开心',at:Date.now()});save('affection',S.affection)}}
+S.streaming=null;render()}
+const bubble=(role,html)=>'<div class="row '+(role==='user'?'me':'')+'">'+(role==='user'?'':'<span class="ava">'+esc(S.character.avatar)+'</span>')+'<div class="bub">'+html+'</div></div>'
+const V={
+chat(){const c=S.character;let last=0
+const items=S.messages.map(m=>{const t=m.createdAt-last>6e5?'<p class="time">'+new Date(m.createdAt).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</p>':'';last=m.createdAt;return t+bubble(m.role,esc(m.content))}).join('')
+const empty=!S.messages.length&&S.streaming===null?'<div style="text-align:center;margin-top:80px"><p style="font-size:40px;margin:0">'+esc(c.avatar)+'</p><p class="hint">'+greeting()+'，和'+esc(c.name)+'说点什么吧</p></div>':''
+const live=S.streaming===null?'':bubble('assistant',S.streaming?'<span id="streaming">'+esc(S.streaming)+'</span>':'<span id="streaming" class="dots"><i></i><i></i><i></i></span>')
+const err=S.error?'<p role="alert" class="hint" style="color:#e11;text-align:center">'+esc(S.error)+'</p>':''
+return '<section class="chat"><header><b>'+esc(c.name)+'</b><small>'+(S.streaming!==null?'正在输入…':'')+'</small></header><div class="list" aria-live="polite">'+empty+items+live+err+'</div><div class="bar"><textarea id="input" rows="1" aria-label="输入消息" placeholder="和'+esc(c.name)+'说点什么…"></textarea><button class="btn" id="send">发送</button></div></section>'},
+character(){const c=S.character,f=[['name','名字'],['avatar','头像（一个 emoji）'],['userName','ta 怎么叫你'],['relationship','你们的关系'],['persona','性格'],['speakingStyle','说话风格']]
+return '<section><div class="hero"><p style="font-size:40px;margin:0">'+esc(c.avatar)+'</p><b>'+esc(c.name)+'</b></div>'+f.map(x=>'<label for="c-'+x[0]+'">'+x[1]+'</label><input type="text" id="c-'+x[0]+'" data-k="'+x[0]+'" value="'+esc(c[x[0]])+'">').join('')+'<p style="margin-top:16px"><button class="btn" id="saveChar">保存</button> <span class="hint" id="note"></span></p></section>'},
+memory(){const list=S.memories.slice().sort((a,b)=>b.pinned-a.pinned||b.createdAt-a.createdAt)
+return '<section><b>'+esc(S.character.name)+'记得的事 · '+S.memories.length+'</b><div style="display:flex;gap:8px;margin:12px 0"><input type="text" id="memIn" aria-label="添加记忆" placeholder="比如：用户对芒果过敏"><button class="btn" id="addMem">添加</button></div>'+(list.map(m=>'<div class="card '+(m.pinned?'pin':'')+'">'+esc(m.content)+'<div class="meta"><span>'+new Date(m.createdAt).toLocaleDateString('zh-CN')+'</span><button data-pin="'+m.id+'">'+(m.pinned?'取消置顶':'置顶')+'</button><button data-del="'+m.id+'">删除</button></div></div>').join('')||'<p class="hint" style="text-align:center;margin-top:60px">还没有记忆。正式版会在聊天后自动整理。</p>')+'</section>'},
+moments(){const a=S.affection
+return '<section><div class="hero"><p style="font-size:32px;margin:0">'+esc(S.character.avatar)+'</p>'+greeting()+'</div><p style="display:flex;justify-content:space-between;margin:20px 0 8px"><b>'+esc(S.character.name)+'对你的心意</b><span style="color:var(--rose)">'+stage(a.score)+' · '+a.score+'</span></p><div class="progress" role="progressbar" aria-label="好感度" aria-valuenow="'+a.score+'" aria-valuemin="0" aria-valuemax="100"><div style="width:'+a.score+'%"></div></div>'+a.log.slice(0,5).map(l=>'<p class="hint">+'+l.delta+' '+esc(l.reason)+'</p>').join('')+'<p style="margin-top:24px"><b>特别的日子</b></p><input type="text" id="annT" aria-label="名称" placeholder="比如：在一起、你的生日"><div style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="date" id="annD" aria-label="日期" value="'+localDate()+'"><label style="margin:0;white-space:nowrap"><input type="checkbox" id="annY" checked> 每年</label><button class="btn" id="addAnn">添加</button></div>'+S.anniversaries.map(x=>'<div class="card" style="display:flex;align-items:center;gap:12px"><div style="flex:1">'+esc(x.title)+'<div class="hint">'+x.date+(x.yearly?' · 每年':'')+'</div></div><span>'+describeDay(x)+'</span><button class="btn ghost" data-delann="'+x.id+'" aria-label="删除'+esc(x.title)+'">删</button></div>').join('')+'</section>'},
+settings(){const s=S.settings
+return '<section><b>模型接口</b><label for="s-baseUrl">接口地址（OpenAI 兼容）</label><input type="text" id="s-baseUrl" data-s="baseUrl" value="'+esc(s.baseUrl)+'"><label for="s-apiKey">API Key（留空 = 演示模式）</label><input type="password" id="s-apiKey" data-s="apiKey" value="'+esc(s.apiKey)+'" autocomplete="off"><label for="s-model">模型</label><input type="text" id="s-model" data-s="model" value="'+esc(s.model)+'"><p class="hint">Key 只存在本机浏览器。部分服务商不允许浏览器直连（CORS），那时需要后端代理。</p><p style="margin-top:24px"><button class="btn ghost" id="clearAll">清空全部预览数据</button></p></section>'}}
+const tabs=[['chat','💬','聊天'],['character','🌸','角色'],['memory','📔','记忆'],['moments','💗','日常'],['settings','⚙️','设置']]
+function render(){$('#banner').textContent=S.settings.apiKey?'预览版 · 已连接你的模型':'预览版 · 演示模式（去「设置」填 API Key 可接真模型）'
+$('#nav').innerHTML=tabs.map(t=>'<button data-tab="'+t[0]+'" '+(S.tab===t[0]?'aria-current="page"':'')+'><span aria-hidden="true">'+t[1]+'</span>'+t[2]+'</button>').join('')
+$('#view').innerHTML=V[S.tab]();const list=$('.list');if(list)list.scrollTop=1e9
+const box=$('#input');if(box){box.oninput=()=>{box.style.height='auto';box.style.height=box.scrollHeight+'px'}
+box.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send()}};$('#send').disabled=S.streaming!==null}}
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset
+if(d.tab){S.tab=d.tab;render()}
+else if(t.id==='send')send()
+else if(t.id==='saveChar'){document.querySelectorAll('[data-k]').forEach(i=>S.character[i.dataset.k]=i.value.trim()||D.character[i.dataset.k]);S.character.avatar=Array.from(S.character.avatar)[0];save('character',S.character);render();$('#note').textContent='已保存'}
+else if(t.id==='addMem'){const v=$('#memIn').value.trim();if(v){S.memories.push({id:uid(),content:v,createdAt:Date.now(),pinned:false});save('memories',S.memories);render()}}
+else if(d.pin){const m=S.memories.find(x=>x.id===d.pin);m.pinned=!m.pinned;save('memories',S.memories);render()}
+else if(d.del){S.memories=S.memories.filter(x=>x.id!==d.del);save('memories',S.memories);render()}
+else if(t.id==='addAnn'){const title=$('#annT').value.trim(),date=$('#annD').value;if(title&&date){S.anniversaries.push({id:uid(),title,date,yearly:$('#annY').checked});save('anniversaries',S.anniversaries);render()}}
+else if(d.delann){S.anniversaries=S.anniversaries.filter(x=>x.id!==d.delann);save('anniversaries',S.anniversaries);render()}
+else if(t.id==='clearAll'&&confirm('清空预览里的聊天、记忆、纪念日和设置？')){Object.keys(localStorage).filter(k=>k.indexOf('cp_')===0).forEach(k=>localStorage.removeItem(k));location.reload()}})
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.s;if(k){S.settings[k]=e.target.value.trim();save('settings',S.settings);render()}})
+render()
+</script>
+</body>
+</html>
