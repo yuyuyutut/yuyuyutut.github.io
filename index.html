@@ -3,53 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f9e8ee">
-<title>Companion 预览</title>
+<meta name="theme-color" content="#ececee">
+<title>Companion · le salon</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital@1&family=Pinyon+Script&display=swap" media="print" onload="this.media='all'">
 <style>
-:root{--blush:#f9e8ee;--rose:#e8869f;--ink:#4a3b40}
+:root{--ink:#3d3d40;--mute:#8d8d92;--line:rgba(60,60,70,.14);--glass:rgba(255,255,255,.38);--edge:rgba(255,255,255,.78)}
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:#fff8fa;color:var(--ink);font-family:system-ui,-apple-system,"PingFang SC",sans-serif;-webkit-tap-highlight-color:transparent}
-#app{max-width:28rem;height:100%;margin:0 auto;display:flex;flex-direction:column;background:#fffc;padding-top:env(safe-area-inset-top)}
-main{flex:1;overflow:hidden}
-section{height:100%;overflow-y:auto;padding:16px 16px 32px}
-nav{display:flex;border-top:1px solid var(--blush);background:#fff;padding-bottom:env(safe-area-inset-bottom)}
-nav button{flex:1;border:0;background:none;padding:8px 0;font-size:12px;color:var(--ink);opacity:.6}
-nav button[aria-current]{color:var(--rose);opacity:1}
-nav span{display:block;font-size:18px}
-.chat{display:flex;flex-direction:column;padding:0}
-.chat header{text-align:center;padding:12px;border-bottom:1px solid var(--blush)}
-.chat header small{display:block;height:16px;font-size:12px;opacity:.6}
-.list{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
-.row{display:flex;align-items:flex-end;gap:8px}.row.me{justify-content:flex-end}
-.ava{width:32px;height:32px;border-radius:50%;background:var(--blush);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.bub{max-width:75%;padding:8px 16px;border-radius:18px 18px 18px 6px;white-space:pre-wrap;word-break:break-word;line-height:1.6;font-size:15px;background:var(--blush)}
-.me .bub{background:var(--rose);color:#fff;border-radius:18px 18px 6px 18px}
-.time{text-align:center;font-size:11px;opacity:.4;margin:0}
-.dots i{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:#4a3b4080;animation:b 1s infinite}
-.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
-@keyframes b{50%{transform:translateY(-4px)}}
-.bar{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid var(--blush)}
-textarea,input[type=text],input[type=password],input[type=date]{width:100%;font:inherit;font-size:16px;padding:8px 12px;border:1px solid var(--blush);border-radius:12px;background:#fff;color:inherit;outline:none}
-textarea:focus,input:focus{border-color:var(--rose)}
-.bar textarea{border-radius:18px;resize:none;max-height:128px}
-.btn{border:0;border-radius:999px;padding:8px 16px;font-size:14px;background:var(--rose);color:#fff;flex-shrink:0}
-.btn.ghost{background:none;color:var(--rose);border:1px solid var(--rose)}
-.btn:disabled{opacity:.4}
-label{display:block;font-size:14px;margin:12px 0 4px}
-.hint{font-size:12px;opacity:.6}
-.card{background:#fff;border-radius:12px;padding:8px 12px;margin:8px 0;font-size:14px}
-.card.pin{background:var(--blush)}
-.meta{display:flex;gap:12px;font-size:11px;opacity:.6;margin-top:4px}
-.meta button{border:0;background:none;font:inherit;color:inherit;padding:0}
-.meta button:first-of-type{margin-left:auto}
-.hero{background:var(--blush);border-radius:16px;padding:16px;text-align:center}
-.progress{height:8px;background:var(--blush);border-radius:999px;overflow:hidden}
-.progress div{height:100%;background:var(--rose);transition:width .4s}
-.banner{background:#fff3cd;font-size:12px;padding:6px 12px;text-align:center}
+html,body{height:100%;margin:0}
+body{color:var(--ink);font-family:"PingFang SC",system-ui,sans-serif;background:#ececee;-webkit-tap-highlight-color:transparent;overflow:hidden}
+.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(60% 40% at 30% 18%,#fff 0,transparent 70%),radial-gradient(50% 35% at 75% 55%,rgba(255,255,255,.9) 0,transparent 70%),radial-gradient(80% 50% at 50% 100%,#fafafa 0,transparent 70%),linear-gradient(#f4f4f5,#e2e2e6)}
+.bg svg{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.star{position:fixed;z-index:0;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:0 0 6px 1px #fff;animation:tw 4s infinite}
+@keyframes tw{50%{opacity:.15}}
+#app{position:relative;z-index:1;max-width:28rem;height:100%;margin:0 auto;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 12px 0}
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(.8);backdrop-filter:blur(14px) saturate(.8);border:1px solid var(--edge);box-shadow:0 8px 30px rgba(80,80,90,.08),inset 0 1px 0 rgba(255,255,255,.85)}
+.script{font-family:"Pinyon Script","Snell Roundhand","Apple Chancery",cursive}
+.sub,.tag,.t,.lbl,.chip,::placeholder{font-family:"Cormorant Garamond","Times New Roman",serif;font-style:italic}
+#head{padding:16px 8px 4px}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+h1{margin:0;font-weight:400;font-size:34px;line-height:1.15;color:#2e2e31}
+.sub{font-size:18px;color:var(--mute)}
+.tag{margin:2px 0 0;font-size:14px;color:var(--mute)}
+.cross{position:relative;font-size:20px;color:#9a9aa0;margin:10px 6px 0 0}.cross i{position:absolute;top:-4px;right:-9px;width:7px;height:7px;border-radius:50%;background:#c6c6ca}
+.chips{display:flex;align-items:center;gap:8px;margin-top:12px}
+.rule{flex:1;height:1px;background:var(--line);position:relative}.rule i{position:absolute;left:0;top:0;height:1px;background:var(--ink);transition:width .6s}
+.chip{border:1px solid rgba(60,60,70,.4);border-radius:999px;padding:2px 12px;font-size:13px;background:rgba(255,255,255,.35);white-space:nowrap}.chip.faint{opacity:.5}
+main{flex:1;min-height:0;display:flex;flex-direction:column}
+.list,.page{flex:1;overflow-y:auto;padding:12px 8px 16px;-webkit-overflow-scrolling:touch}
+.list{display:flex;flex-direction:column;gap:18px}
+.lbl{display:block;font-size:12.5px;color:var(--mute)}
+.t{font-size:12.5px;color:#9b9ba0}
+.txt{margin:4px 0;white-space:pre-wrap;word-break:break-word;line-height:2;font-size:15.5px;color:#333}
+.me{align-self:flex-end;max-width:78%;text-align:right}
+.card{border-radius:18px;padding:12px 18px;text-align:left;white-space:pre-wrap;word-break:break-word;line-height:1.8;margin-top:4px}
+.composer{display:flex;align-items:flex-end;gap:8px;border-radius:20px;margin:6px 2px 8px;padding:10px 10px 10px 18px}
+.composer textarea,.composer input{flex:1;min-width:0;border:0;background:none;outline:none;resize:none;font:inherit;font-size:16px;color:var(--ink);max-height:120px;padding:5px 0}
+::placeholder{color:#a5a5aa}
+.send{width:34px;height:34px;border-radius:50%;border:1px solid rgba(60,60,70,.45);background:rgba(255,255,255,.5);color:#555;font-size:18px;line-height:1;flex-shrink:0}.send:disabled{opacity:.35}
+nav{display:flex;justify-content:space-around;border-top:1px solid var(--line);margin:0 4px;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+nav button{border:0;background:none;color:#a5a5aa;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;letter-spacing:.1em}
+nav button b{font-weight:400;font-size:18px}nav button[aria-current]{color:var(--ink)}
+.panel{border-radius:24px;padding:16px 20px;margin-bottom:14px}
+.row{display:block;padding:14px 0 6px;border-bottom:1px solid var(--line)}
+.row span{display:block;font-size:15px}
+.row em{font-family:"Cormorant Garamond",serif;color:#a5a5aa;font-size:13px;margin-left:6px}
+.row input{width:100%;border:0;background:none;outline:none;font:inherit;font-size:16px;color:#6e6e73;padding:6px 0 0}
+.row.chk{display:flex;justify-content:space-between;align-items:center}
+.pill{border:1px solid rgba(60,60,70,.4);border-radius:999px;background:rgba(255,255,255,.45);padding:6px 20px;font-size:13px;color:var(--ink)}
+.center{text-align:center;margin:18px 0 4px}
+.frag{border-radius:16px;padding:12px 16px;margin:16px 0}.frag p{margin:6px 0;line-height:1.8}.frag.pin{background:rgba(255,255,255,.62)}
+.meta{display:flex;justify-content:flex-end;gap:14px}.meta button,.day button{border:0;background:none;color:#9b9ba0;font-size:12px;padding:0}
+.empty{margin:auto;text-align:center;color:var(--mute)}.big{font-size:46px;color:#55555a;margin:0}
+.slider{position:relative;height:2px;background:var(--line);margin:18px 4px 6px}.slider i{position:absolute;left:0;top:0;height:2px;background:var(--ink)}.slider b{position:absolute;top:-4px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--ink)}
+.ends{display:flex;justify-content:space-between}
+.sec{font-weight:400;font-size:28px;margin:0}
+.day{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.dots i{display:inline-block;width:5px;height:5px;margin:0 2px;border-radius:50%;background:#9b9ba0;animation:b 1.2s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{opacity:.2}}
+.err{color:#a87272;text-align:center;font-size:12px}
+.hint{font-size:12px;color:var(--mute);line-height:1.7}
 </style>
 </head>
 <body>
-<div id="app"><div class="banner" id="banner">加载中…</div><main id="view"></main><nav id="nav" aria-label="主导航"></nav></div>
+<div class="bg" aria-hidden="true"><svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><defs><filter id="f"><feGaussianBlur stdDeviation="8"/></filter><filter id="g"><feGaussianBlur stdDeviation="3"/></filter></defs><g fill="none" stroke="#fff" stroke-width="12" filter="url(#g)"><path d="M-30 560V340a95 95 0 0 1 190 0v220"/><path d="M240 560V340a95 95 0 0 1 190 0v220"/></g><g fill="none" stroke="#cfcfd4" stroke-width="2" opacity=".6"><path d="M-20 560V345a88 88 0 0 1 176 0v215"/><path d="M248 560V345a88 88 0 0 1 176 0v215"/></g><g fill="#fff" filter="url(#f)"><ellipse cx="200" cy="480" rx="150" ry="60"/><ellipse cx="115" cy="430" rx="70" ry="40"/><ellipse cx="290" cy="440" rx="80" ry="45"/><ellipse cx="200" cy="720" rx="260" ry="90"/></g><g fill="#d3d3d8" opacity=".55" filter="url(#f)"><path d="M50 190c70-70 180-100 300-75-90 8-160 45-205 100z"/><circle cx="70" cy="230" r="26"/></g></svg></div>
+<span class="star" style="top:12%;left:78%"></span><span class="star" style="top:46%;left:92%;animation-delay:1s"></span><span class="star" style="top:63%;left:6%;animation-delay:2s"></span><span class="star" style="top:30%;left:15%;animation-delay:3s"></span>
+<div id="app"><div id="head"></div><main id="view"></main><nav id="nav" aria-label="主导航"></nav></div>
 <script>
 const $=s=>document.querySelector(s)
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
@@ -58,11 +76,13 @@ const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem('cp_'+k));return 
 const save=(k,v)=>{try{localStorage.setItem('cp_'+k,JSON.stringify(v))}catch(e){}}
 const D={settings:{baseUrl:'https://api.openai.com/v1',apiKey:'',model:'gpt-4o-mini'},character:{name:'小遥',avatar:'🌸',userName:'你',relationship:'刚开始交往不久的恋人',persona:'温柔、有点黏人，偶尔害羞，会认真记住你说过的小事',speakingStyle:'口语化，句子短，会用语气词'}}
 const S={tab:'chat',settings:Object.assign({},D.settings,load('settings',{})),character:Object.assign({},D.character,load('character',{})),messages:load('messages',[]),memories:load('memories',[]),anniversaries:load('anniversaries',[]),affection:load('affection',{score:50,log:[]}),streaming:null,error:''}
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+const pad=n=>String(n).padStart(2,'0')
+const stamp=ts=>{const d=new Date(ts);return MON[d.getMonth()]+' '+d.getDate()+' · '+pad(d.getHours())+':'+pad(d.getMinutes())}
 const greeting=()=>{const h=new Date().getHours();return h<5?'这么晚还没睡呀':h<11?'早安':h<14?'午安，吃饭了吗':h<18?'下午好':h<23?'晚上好':'该睡觉啦'}
 const stage=s=>s>=85?'深爱':s>=65?'亲密':s>=45?'心动':s>=25?'有点闹别扭':'冷淡'
 const today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
 const parseD=s=>{const p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
-const pad=n=>String(n).padStart(2,'0')
 const localDate=(d=new Date())=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())
 function describeDay(a){const t=today0(),b=parseD(a.date),DAY=864e5
 if(!a.yearly){const x=Math.round((b-t)/DAY);return x===0?'就是今天':x>0?'还有 '+x+' 天':'已经 '+(-x)+' 天'}
@@ -70,10 +90,10 @@ let n=new Date(t.getFullYear(),b.getMonth(),b.getDate());if(n<t)n.setFullYear(n.
 const x=Math.round((n-t)/DAY);return x===0?'就是今天':'还有 '+x+' 天'}
 function systemPrompt(){const c=S.character,mem=S.memories.map(m=>'- '+m.content).join('\n')
 return '你是'+c.name+'，正在和用户聊天。\n性格：'+c.persona+'\n说话风格：'+c.speakingStyle+'\n关系：'+c.relationship+'\n你称呼用户为「'+c.userName+'」。\n像发消息一样简短，不要自称 AI。\n现在是'+new Date().toLocaleString('zh-CN')+'。感情状态：'+stage(S.affection.score)+'。'+(mem?'\n你记得：\n'+mem:'')}
-const demo=['嗯嗯，我在听呢～','诶…你这么说我会害羞的啦','今天过得怎么样呀？','我也想你了 🥺','哼，那你要记得早点休息哦','真的吗！快多和我说说']
+const demo=['嗯，我在听。','你这么说……我会当真的。','今天过得怎么样？慢慢说。','我也想你了。','那你要记得早点休息。','真的吗，再多和我说一点。']
 const sleep=ms=>new Promise(r=>setTimeout(r,ms))
 async function getReply(turns,onChunk){
-if(!S.settings.apiKey){const t=demo[Math.floor(Math.random()*demo.length)];await sleep(600);for(const ch of t){await sleep(45);onChunk(ch)}return}
+if(!S.settings.apiKey){const t=demo[Math.floor(Math.random()*demo.length)];await sleep(700);for(const ch of t){await sleep(55);onChunk(ch)}return}
 const res=await fetch(S.settings.baseUrl.replace(/\/+$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+S.settings.apiKey},body:JSON.stringify({model:S.settings.model,messages:turns,stream:true})})
 if(!res.ok)throw new Error('请求失败（'+res.status+'）')
 const rd=res.body.getReader(),dec=new TextDecoder();let buf=''
@@ -86,36 +106,37 @@ S.messages.push({id:uid(),role:'user',content:text,createdAt:Date.now()});save('
 S.error='';S.streaming='';render()
 const turns=[{role:'system',content:systemPrompt()}].concat(S.messages.slice(-20).map(m=>({role:m.role,content:m.content})))
 let reply=''
-try{await getReply(turns,t=>{reply+=t;S.streaming=reply;const el=$('#streaming');if(el){el.className='';el.textContent=reply;$('.list').scrollTop=1e9}})}catch(e){S.error=e.message}
+try{await getReply(turns,t=>{reply+=t;S.streaming=reply;const el=$('#streaming');if(el){el.textContent=reply;$('.list').scrollTop=1e9}})}catch(e){S.error=e.message}
 if(reply){S.messages.push({id:uid(),role:'assistant',content:reply,createdAt:Date.now()});save('messages',S.messages)
 if(!S.settings.apiKey&&Math.random()<.4){S.affection.score=Math.min(100,S.affection.score+1);S.affection.log.unshift({delta:1,reason:'聊得很开心',at:Date.now()});save('affection',S.affection)}}
 S.streaming=null;render()}
-const bubble=(role,html)=>'<div class="row '+(role==='user'?'me':'')+'">'+(role==='user'?'':'<span class="ava">'+esc(S.character.avatar)+'</span>')+'<div class="bub">'+html+'</div></div>'
+const H={chat:()=>[esc(S.character.name),'le salon','Falling in the same direction'],character:()=>['Personnage','','ta 的样子与说话的方式'],memory:()=>['Retrospect','回溯','记忆碎片按时间漂浮'],moments:()=>['Les jours','','心意与特别的日子'],settings:()=>['Paramètres','','légère et silencieuse']}
 const V={
-chat(){const c=S.character;let last=0
-const items=S.messages.map(m=>{const t=m.createdAt-last>6e5?'<p class="time">'+new Date(m.createdAt).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</p>':'';last=m.createdAt;return t+bubble(m.role,esc(m.content))}).join('')
-const empty=!S.messages.length&&S.streaming===null?'<div style="text-align:center;margin-top:80px"><p style="font-size:40px;margin:0">'+esc(c.avatar)+'</p><p class="hint">'+greeting()+'，和'+esc(c.name)+'说点什么吧</p></div>':''
-const live=S.streaming===null?'':bubble('assistant',S.streaming?'<span id="streaming">'+esc(S.streaming)+'</span>':'<span id="streaming" class="dots"><i></i><i></i><i></i></span>')
-const err=S.error?'<p role="alert" class="hint" style="color:#e11;text-align:center">'+esc(S.error)+'</p>':''
-return '<section class="chat"><header><b>'+esc(c.name)+'</b><small>'+(S.streaming!==null?'正在输入…':'')+'</small></header><div class="list" aria-live="polite">'+empty+items+live+err+'</div><div class="bar"><textarea id="input" rows="1" aria-label="输入消息" placeholder="和'+esc(c.name)+'说点什么…"></textarea><button class="btn" id="send">发送</button></div></section>'},
-character(){const c=S.character,f=[['name','名字'],['avatar','头像（一个 emoji）'],['userName','ta 怎么叫你'],['relationship','你们的关系'],['persona','性格'],['speakingStyle','说话风格']]
-return '<section><div class="hero"><p style="font-size:40px;margin:0">'+esc(c.avatar)+'</p><b>'+esc(c.name)+'</b></div>'+f.map(x=>'<label for="c-'+x[0]+'">'+x[1]+'</label><input type="text" id="c-'+x[0]+'" data-k="'+x[0]+'" value="'+esc(c[x[0]])+'">').join('')+'<p style="margin-top:16px"><button class="btn" id="saveChar">保存</button> <span class="hint" id="note"></span></p></section>'},
+chat(){const c=S.character
+const items=S.messages.map(m=>m.role==='user'?`<div class="me"><span class="t">${stamp(m.createdAt)}</span><div class="card glass">${esc(m.content)}</div></div>`:`<div><span class="lbl">✦ › murmure</span><p class="txt">${esc(m.content)}</p><span class="t">${stamp(m.createdAt)}</span></div>`).join('')
+const empty=!S.messages.length&&S.streaming===null?`<div class="empty"><p class="script big">Bonjour</p><p>${greeting()}，和${esc(c.name)}说点什么吧</p></div>`:''
+const live=S.streaming===null?'':`<div><span class="lbl">✦ › murmure</span><p class="txt" id="streaming">${S.streaming?esc(S.streaming):'<span class="dots"><i></i><i></i><i></i></span>'}</p></div>`
+const err=S.error?`<p role="alert" class="err">${esc(S.error)}</p>`:''
+return `<div class="list" aria-live="polite">${empty}${items}${live}${err}</div><div class="composer glass"><textarea id="input" rows="1" aria-label="输入消息" placeholder="écrire…"></textarea><button class="send" id="send" aria-label="发送">＋</button></div>`},
+character(){const c=S.character,f=[['name','名字','nom'],['avatar','头像','emblème'],['userName','ta 怎么叫你','ton nom'],['relationship','你们的关系','lien'],['persona','性格','âme'],['speakingStyle','说话风格','voix']]
+return `<div class="page"><div class="glass panel">${f.map(x=>`<label class="row"><span>${x[1]}<em>${x[2]}</em></span><input type="text" data-k="${x[0]}" value="${esc(c[x[0]])}"></label>`).join('')}<p class="center"><button class="pill" id="saveChar">保存</button></p><p class="center t" id="note"></p></div></div>`},
 memory(){const list=S.memories.slice().sort((a,b)=>b.pinned-a.pinned||b.createdAt-a.createdAt)
-return '<section><b>'+esc(S.character.name)+'记得的事 · '+S.memories.length+'</b><div style="display:flex;gap:8px;margin:12px 0"><input type="text" id="memIn" aria-label="添加记忆" placeholder="比如：用户对芒果过敏"><button class="btn" id="addMem">添加</button></div>'+(list.map(m=>'<div class="card '+(m.pinned?'pin':'')+'">'+esc(m.content)+'<div class="meta"><span>'+new Date(m.createdAt).toLocaleDateString('zh-CN')+'</span><button data-pin="'+m.id+'">'+(m.pinned?'取消置顶':'置顶')+'</button><button data-del="'+m.id+'">删除</button></div></div>').join('')||'<p class="hint" style="text-align:center;margin-top:60px">还没有记忆。正式版会在聊天后自动整理。</p>')+'</section>'},
-moments(){const a=S.affection
-return '<section><div class="hero"><p style="font-size:32px;margin:0">'+esc(S.character.avatar)+'</p>'+greeting()+'</div><p style="display:flex;justify-content:space-between;margin:20px 0 8px"><b>'+esc(S.character.name)+'对你的心意</b><span style="color:var(--rose)">'+stage(a.score)+' · '+a.score+'</span></p><div class="progress" role="progressbar" aria-label="好感度" aria-valuenow="'+a.score+'" aria-valuemin="0" aria-valuemax="100"><div style="width:'+a.score+'%"></div></div>'+a.log.slice(0,5).map(l=>'<p class="hint">+'+l.delta+' '+esc(l.reason)+'</p>').join('')+'<p style="margin-top:24px"><b>特别的日子</b></p><input type="text" id="annT" aria-label="名称" placeholder="比如：在一起、你的生日"><div style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="date" id="annD" aria-label="日期" value="'+localDate()+'"><label style="margin:0;white-space:nowrap"><input type="checkbox" id="annY" checked> 每年</label><button class="btn" id="addAnn">添加</button></div>'+S.anniversaries.map(x=>'<div class="card" style="display:flex;align-items:center;gap:12px"><div style="flex:1">'+esc(x.title)+'<div class="hint">'+x.date+(x.yearly?' · 每年':'')+'</div></div><span>'+describeDay(x)+'</span><button class="btn ghost" data-delann="'+x.id+'" aria-label="删除'+esc(x.title)+'">删</button></div>').join('')+'</section>'},
+return `<div class="page"><div class="composer glass"><input id="memIn" aria-label="添加记忆" placeholder="记下一件小事…"><button class="send" id="addMem" aria-label="添加记忆">＋</button></div>${list.map((m,i)=>`<div class="frag glass ${m.pinned?'pin':''}" style="transform:rotate(${i%2?1.5:-2}deg);margin-${i%2?'left':'right'}:16%"><span class="t">✦ ${stamp(m.createdAt)}</span><p>${esc(m.content)}</p><div class="meta"><button data-pin="${m.id}">${m.pinned?'取消置顶':'置顶'}</button><button data-del="${m.id}">删除</button></div></div>`).join('')||'<p class="center hint">还没有记忆碎片。正式版会在聊天后自动整理。</p>'}</div>`},
+moments(){const a=S.affection,c=S.character
+return `<div class="page"><div class="glass panel"><span class="t">${greeting()}</span><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px"><span class="script sec">${esc(c.name)}</span><span class="t">${stage(a.score)} · ${a.score}</span></div><div class="slider" role="progressbar" aria-label="好感度" aria-valuenow="${a.score}" aria-valuemin="0" aria-valuemax="100"><i style="width:${a.score}%"></i><b style="left:${a.score}%"></b></div><div class="ends t"><span>0</span><span>100</span></div>${a.log.slice(0,4).map(l=>`<p class="hint">+${l.delta} · ${esc(l.reason)} <span class="t">${stamp(l.at)}</span></p>`).join('')}</div><div class="glass panel"><h2 class="script sec">Les dates</h2><label class="row"><span>名称</span><input id="annT" type="text" placeholder="在一起、你的生日"></label><label class="row"><span>日期</span><input id="annD" type="date" value="${localDate()}"></label><label class="row chk"><span>每年重复</span><input id="annY" type="checkbox" checked></label><p class="center"><button class="pill" id="addAnn">添加</button></p>${S.anniversaries.map(x=>`<div class="day"><div style="flex:1">${esc(x.title)}<div class="t">${x.date}${x.yearly?' · chaque année':''}</div></div><span>${describeDay(x)}</span><button data-delann="${x.id}" aria-label="删除${esc(x.title)}">删除</button></div>`).join('')}</div></div>`},
 settings(){const s=S.settings
-return '<section><b>模型接口</b><label for="s-baseUrl">接口地址（OpenAI 兼容）</label><input type="text" id="s-baseUrl" data-s="baseUrl" value="'+esc(s.baseUrl)+'"><label for="s-apiKey">API Key（留空 = 演示模式）</label><input type="password" id="s-apiKey" data-s="apiKey" value="'+esc(s.apiKey)+'" autocomplete="off"><label for="s-model">模型</label><input type="text" id="s-model" data-s="model" value="'+esc(s.model)+'"><p class="hint">Key 只存在本机浏览器。部分服务商不允许浏览器直连（CORS），那时需要后端代理。</p><p style="margin-top:24px"><button class="btn ghost" id="clearAll">清空全部预览数据</button></p></section>'}}
-const tabs=[['chat','💬','聊天'],['character','🌸','角色'],['memory','📔','记忆'],['moments','💗','日常'],['settings','⚙️','设置']]
-function render(){$('#banner').textContent=S.settings.apiKey?'预览版 · 已连接你的模型':'预览版 · 演示模式（去「设置」填 API Key 可接真模型）'
-$('#nav').innerHTML=tabs.map(t=>'<button data-tab="'+t[0]+'" '+(S.tab===t[0]?'aria-current="page"':'')+'><span aria-hidden="true">'+t[1]+'</span>'+t[2]+'</button>').join('')
+return `<div class="page"><div class="glass panel"><label class="row"><span>接口地址<em>adresse</em></span><input type="text" data-s="baseUrl" value="${esc(s.baseUrl)}"></label><label class="row"><span>API Key<em>clef · 留空为演示</em></span><input type="password" data-s="apiKey" value="${esc(s.apiKey)}" autocomplete="off"></label><label class="row"><span>模型<em>modèle</em></span><input type="text" data-s="model" value="${esc(s.model)}"></label><p class="hint">Key 只存在本机浏览器。部分服务商不允许浏览器直连，那时需要后端代理。</p><p class="center"><button class="pill" id="clearAll">réinitialiser · 清空数据</button></p></div><p class="center t">☾　✳　忘れないで</p></div>`}}
+const tabs=[['chat','☾','聊天'],['character','❀','角色'],['memory','✧','回溯'],['moments','♡','日常'],['settings','✳','设置']]
+function render(){const h=H[S.tab](),a=S.affection
+$('#head').innerHTML=`<div class="top"><div><h1><span class="script">${h[0]}</span>${h[1]?`<span class="sub"> · ${h[1]}</span>`:''}</h1><p class="tag">${h[2]}</p></div><span class="cross" aria-hidden="true">✝<i></i></span></div><div class="chips"><span class="rule"><i style="width:${a.score}%"></i></span><span class="chip faint">${a.score}% · ${stage(a.score)}</span><span class="chip">${S.settings.apiKey?esc(S.settings.model):'démo'}</span></div>`
+$('#nav').innerHTML=tabs.map(t=>`<button data-tab="${t[0]}" ${S.tab===t[0]?'aria-current="page"':''}><b aria-hidden="true">${t[1]}</b>${t[2]}</button>`).join('')
 $('#view').innerHTML=V[S.tab]();const list=$('.list');if(list)list.scrollTop=1e9
 const box=$('#input');if(box){box.oninput=()=>{box.style.height='auto';box.style.height=box.scrollHeight+'px'}
 box.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send()}};$('#send').disabled=S.streaming!==null}}
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset
 if(d.tab){S.tab=d.tab;render()}
 else if(t.id==='send')send()
-else if(t.id==='saveChar'){document.querySelectorAll('[data-k]').forEach(i=>S.character[i.dataset.k]=i.value.trim()||D.character[i.dataset.k]);S.character.avatar=Array.from(S.character.avatar)[0];save('character',S.character);render();$('#note').textContent='已保存'}
+else if(t.id==='saveChar'){document.querySelectorAll('[data-k]').forEach(i=>S.character[i.dataset.k]=i.value.trim()||D.character[i.dataset.k]);S.character.avatar=Array.from(S.character.avatar)[0];save('character',S.character);render();$('#note').textContent='enregistré · 已保存'}
 else if(t.id==='addMem'){const v=$('#memIn').value.trim();if(v){S.memories.push({id:uid(),content:v,createdAt:Date.now(),pinned:false});save('memories',S.memories);render()}}
 else if(d.pin){const m=S.memories.find(x=>x.id===d.pin);m.pinned=!m.pinned;save('memories',S.memories);render()}
 else if(d.del){S.memories=S.memories.filter(x=>x.id!==d.del);save('memories',S.memories);render()}
